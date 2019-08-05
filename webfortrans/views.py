@@ -13,6 +13,7 @@ jieba.load_userdict("D:\CSE\jetbrains\pycharm\WebTrans\webfortrans\myfiles\成�
 # keywords=tfidf("加载")
 # print(keywords)
 # 将所有服务做成类然后在这部分预加载。
+tiqu=ClassForWeb.Tf_tiqu()
 
 def index(request):
     '''
@@ -29,7 +30,7 @@ def index(request):
     print(request.POST)
     if "old2new.x" in request.POST:
         print('old2new')
-        Demo=ClassForWeb.get_full_translate(src)
+        Demo=ClassForWeb.get_full_translate(tiqu,src)
         return render(request, 'version-02/index.html',{'Demo':Demo})
     return render(request, 'version-02/index.html')
 

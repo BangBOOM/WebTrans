@@ -16,6 +16,14 @@ class Dic_demo():
         self.key=key
         self.value=value
 
+class Tf_tiqu():
+    def __init__(self):
+        self.tfidf = analyse.extract_tags
+        self.keyword=self.tfidf("加载")
+        print(self.keyword)
+    def keyword_extraction(self,sentence):
+        return self.tfidf(sentence)
+
 
 
 def get_dic_translate(src):
@@ -61,7 +69,7 @@ def find_max_similarity(obj_list,src_sentence):
             demo=similarity
     return obj
 
-def get_corpus_translate(src):
+def get_corpus_translate(tiqu,src):
     '''
     :param src: 表示查找的内容
     :return: 语料库列表（原文，译文，出处）
@@ -75,9 +83,11 @@ def get_corpus_translate(src):
         obj = models.Corpus.objects.filter(old__contains=input_sent)
         if len(obj) == 0:
             tfidf = analyse.extract_tags
-            keywords = tfidf(input_sent)
+            keywords=tiqu.keyword_extraction(input_sent)
             final_list = []
-            for k in keywords:
+            # 这部分keywords越多会影响速度
+            for k in keywords[0:3]:
+                print(k)
                 objs = models.Corpus.objects.filter(old__contains=k)
                 if len(objs) > 0:
                     obj = objs[0]
@@ -87,8 +97,8 @@ def get_corpus_translate(src):
             corpus_list.append(obj[0])
     return corpus_list
 
-def get_full_translate(src):
-    tgt_corpus=get_corpus_translate(src)
+def get_full_translate(tiqu,src):
+    tgt_corpus=get_corpus_translate(tiqu,src)
     tgt_dic=get_dic_translate(src)
     Demo=Translate(src,src,tgt_corpus,tgt_dic)
     return Demo
