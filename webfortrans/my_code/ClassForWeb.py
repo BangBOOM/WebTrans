@@ -17,6 +17,7 @@ class Dic_demo():
         self.value=value
 
 class Tf_tiqu():
+    """方便分词模块在view中预加载"""
     def __init__(self):
         self.tfidf = analyse.extract_tags
         self.keyword=self.tfidf("加载")
