@@ -1,8 +1,9 @@
 import os,re,jieba,time
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "WebTrans.settings")
-import django,paramiko
+import django,paramiko,Levenshtein,time
 django.setup()
 from  webfortrans import models
+from jieba import analyse
 # 向字典中导入数据
 def deal_dic():
     path = "D:\\NEU\\大创\\数据\\词典\\字典\\古汉语字典_01.txt"
@@ -49,15 +50,16 @@ def deal_corpus():
             tgt=tgt_lines[j]
             models.Corpus.objects.create(old=src,new=tgt,title=title)
 
+
 def search_corpus(input_line):
-
-
     sentences=re.split('(。|\；|！|\!|\.|？|\?)', input_line)
     output_sents=[]
+    for i in models.Corpus.objects.all():
+        print(i.old)
     for i in range(int(len(sentences) / 2)):
         src_tgt_title_dic={}
         input_sent = sentences[2 * i] + sentences[2 * i + 1]
-        obj=models.Corpus.objects.filter(src__contains=input_sent)
+        obj=models.Corpus.objects.filter(old__contains=input_sent)
         if len(obj)==0:
             print('无语料库翻译')
             continue
@@ -66,6 +68,7 @@ def search_corpus(input_line):
         src_tgt_title_dic['title']=obj[0].title.strip()
         output_sents.append(obj[0])
     return output_sents
+
 '''
 语料库查找还需进一步完善，相似匹配
 '''
@@ -96,41 +99,42 @@ def search_dic(input_line):
     return
 
 
-def get_model_translate(src):
-    src_cut=jieba.cut(src,HMM=False)
-    src_cut=' '.join(src_cut)
-    with open('src.txt','w',encoding='utf-8') as f:
-        f.write(src_cut)
-    hostname = '39.104.88.70'
-    password = '.'
-    username = 'dingjiapeng'
-    port = 22
-    client = paramiko.SSHClient()
-    client.load_system_host_keys()
-    client.set_missing_host_key_policy(paramiko.WarningPolicy())
-    client.connect(hostname, port=port, username=username, password=password)
 
-    # 上传文件
-    sftp=client.open_sftp()
-    sftp.put('src.txt','/home/dingjiapeng/ywq/new_src.txt')
-    # 执行翻译命令
-    command_x = 'CUDA_VISIBLE_DEVICES=-1 python3 /home/dingjiapeng/tensor2tensor/bin/t2t-decoder' \
-               + ' --data_dir=/home/dingjiapeng/data/' \
-               + ' --problem=wmt_zhen_tokens_32k --model=transformer --hparams_set=transformer_base_single_gpu ' \
-               + '--output_dir=/home/dingjiapeng/model ' \
-               + '--decode_beam_size=12 --decode_alpha=1.3  ' \
-               + '--decode_from_file=/home/dingjiapeng/ywq/new_src.txt ' \
-               + '--decode_to_file=/home/dingjiapeng/ywq/new_tgt.txt'
-    stdin, stdout, stderr = client.exec_command(command_x)
-    time.sleep(60)
-    sftp.get('/home/dingjiapeng/ywq/new_tgt.txt','tgt.txt')
-    with open('tgt.txt','r',encoding='utf-8') as f:
-        for l in f.readlines():
-            print(l)
-
-
-
+def find_max_similarity(obj_list,src_sentence):
+    demo=0
+    obj = None
+    for l in obj_list:
+        similarity=Levenshtein.ratio(src_sentence,l.old)
+        if similarity>demo:
+            obj=l
+            demo=similarity
+    return obj
 
 if __name__=='__main__':
+    text="东至于海，登丸山，及岱宗。西至于空桐，登鸡头。"
+    tfidf = analyse.extract_tags
+    start = time.time()
+    keywords=tfidf("加载")
+    end =time.time()
+    print(end-start)
+    final_list=[]
+    print("hello")
+    keywords = tfidf(text)
+    for k in keywords:
+        # print(k)
+        objs=models.Corpus.objects.filter(old__contains=k)
+        if len(objs)>0:
+            obj=find_max_similarity(objs,text)
+            final_list.append(obj)
+    if len(final_list)>0:
+        for l in final_list:
+            print(l.old.strip())
+            print(l.new.strip())
+            print(l.title.strip())
 
-    deal_corpus()
+
+
+
+
+
+
