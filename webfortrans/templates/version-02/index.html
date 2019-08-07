@@ -34,21 +34,22 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
       <img class="grpelem" id="u139-4" alt="古文翻译" width="224" height="58" src="{% static "version_2/images/u139-4.png" %}"/><!-- rasterized frame -->
      </div>
     </div>
+
     <div class="clearfix colelem" id="pbuttonu98"><!-- group -->
      <div class="Button rounded-corners clearfix grpelem" id="buttonu98"><!-- container box -->
-{#      <img class="grpelem" id="u99" alt="古文→现代文" type='submit' src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->#}
+      <img class="grpelem" id="u99" alt="古文→现代文" type='submit' src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->
          <input type="image" class="grpelem" id="u99" alt="古文→现代文" name="old2new" src="{% static "version_2/images/blank.gif" %}"  οnclick="document.formName.submit()">
-{#         <input type='submit' style="background-color:transparent" value='翻译'>#}
      </div>
      <div class="Button rounded-corners clearfix grpelem" id="buttonu100"><!-- container box -->
-{#      <img class="grpelem" id="u101" alt="现代文→古文" src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->#}
+      <img class="grpelem" id="u101" alt="现代文→古文" src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->
          <input type="image" class="grpelem" id="u101" alt="现代文→古文" name="new2old" src="{% static "version_2/images/blank.gif" %}"  οnclick="document.formName.submit()">
      </div>
      <div class="Button rounded-corners clearfix grpelem" id="buttonu102"><!-- container box -->
-{#      <img class="grpelem" id="u103" alt="古文自动加标点" src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->#}
+      <img class="grpelem" id="u103" alt="古文自动加标点" src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->
          <input type="image" class="grpelem" id="u103" alt="古文自动加标点" name="autopunc" src="{% static "version_2/images/blank.gif" %}"  οnclick="document.formName.submit()">
      </div>
     </div>
+
     <div class="clearfix colelem" id="pu96"><!-- group -->
      <div class="rounded-corners grpelem" id="u96"><!-- simple frame --></div>
      <div class="rounded-corners grpelem" id="u97"><!-- simple frame --></div>
@@ -57,7 +58,7 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
        <div class="ContainerGroup clearfix" id="u105"><!-- stack box -->
         <div class="Container clearfix grpelem" id="u106"><!-- group -->
          <div class="clearfix grpelem" id="u107-13"><!-- content -->
-         <textarea style="border:0;background-color:transparent;color:#666464;width: 500px;height: 220px;padding: 10px;" readonly='readonly'>
+         <textarea style="border:0;background-color:transparent;color:#666464;width: 500px;height: 240px;padding: 10px;" readonly='readonly'>
             {% for cor_dic in Demo.tgt_corpus %}
 原文：{{ cor_dic.old }}
 译文：{{ cor_dic.new }}
@@ -82,7 +83,7 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
        <div class="ContainerGroup clearfix" id="u123"><!-- stack box -->
         <div class="Container clearfix grpelem" id="u124"><!-- group -->
          <div class="clearfix grpelem" id="u125-17"><!-- content -->
-           <textarea style="border:0;background-color:transparent;color:#666464;width: 500px;height: 220px;padding: 10px;" readonly='readonly'>
+           <textarea style="border:0;background-color:transparent;color:#666464;width: 500px;height: 240px;padding: 10px;" readonly='readonly'>
 {% for x in Demo.tgt_dic %}
 {{ x.key }}
 {% for l in x.value %}
@@ -106,6 +107,7 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
      <div class="clip_frame grpelem" id="u130"><!-- image -->
       <img class="block" id="u130_img" src="{% static "version_2/images/12-11.png" %}" alt="" width="198" height="144"/>
      </div>
+
      <div class="clip_frame grpelem" id="u132"><!-- image -->
       <img class="block" id="u132_img" src="{% static "version_2/images/2-%e5%9b%be%e7%89%8716-crop-u132.png" %}" alt="" width="560" height="240"/>
      </div>
@@ -123,6 +125,7 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
    </div>
       </form>
   </div>
+
   <div class="preload_images">
    <img class="preload" src="{% static "version_2/images/u99-r.png" %}" alt=""/>
    <img class="preload" src="{% static "version_2/images/u101-r.png" %}" alt=""/>

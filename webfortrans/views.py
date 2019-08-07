@@ -1,8 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .my_code import ClassForWeb
 import jieba
-from jieba import analyse
 # Create your views here.
 
 jieba.load_userdict("D:\CSE\jetbrains\pycharm\WebTrans\webfortrans\myfiles\dict.txt")
@@ -17,20 +15,32 @@ tiqu=ClassForWeb.Tf_tiqu()
 
 def index(request):
     '''
-
     :param request: 提供的请求
     :return:
     '''
-    try:
-        src=request.POST.get('input')
-        if src is None:
-            return render(request, 'version-02/index.html')
-    except:
+    if request.method=="GET":
+        print("get method")
         return render(request, 'version-02/index.html')
-    print(request.POST)
-    if "old2new.x" in request.POST:
-        print('old2new')
-        Demo=ClassForWeb.get_full_translate(tiqu,src)
-        return render(request, 'version-02/index.html',{'Demo':Demo})
-    return render(request, 'version-02/index.html')
+    else:
+        print(request.POST)
+        src=request.POST.get('input')
+        if len(src.strip())==0:
+            return render(request, 'version-02/index.html')
+        # 前端提交古文到现代文翻译
+        if "old2new.x" in request.POST:
+            print('old2new')
+            Demo=ClassForWeb.get_full_translate(tiqu,src,src)
+            return render(request, 'version-02/index.html',{'Demo':Demo})
+
+        # 前端提交添加标点
+        if "autopunc.x" in request.POST:
+            print('autopunc')
+            Demo = ClassForWeb.auto_add_punctuation(tiqu, src, src)
+            return render(request, 'version-02/index.html',{'Demo':Demo})
+
+        # 前端提交现代文到古文
+        if "new2old.x" in request.POST:
+            print("new2old")
+            Demo = ClassForWeb.get_back_translate(tiqu, src, src)
+            return render(request, 'version-02/index.html',{'Demo':Demo})
 

@@ -23,7 +23,8 @@ class Tf_tiqu():
         self.keyword=self.tfidf("加载")
         print(self.keyword)
     def keyword_extraction(self,sentence):
-        return self.tfidf(sentence)
+        out_put = ' '.join(jieba.cut(sentence, HMM=False))
+        return self.tfidf(out_put)
 
 
 
@@ -70,6 +71,8 @@ def find_max_similarity(obj_list,src_sentence):
             demo=similarity
     return obj
 
+
+
 def get_corpus_translate(tiqu,src):
     '''
     :param src: 表示查找的内容
@@ -78,30 +81,62 @@ def get_corpus_translate(tiqu,src):
     corpus_list = []
     sentences = re.split('(。|\；|！|\!|\.|？|\?)', src)
     for i in range(int(len(sentences) / 2)):
-        list_demo=[]
         input_sent = sentences[2 * i] + sentences[2 * i + 1]
         print(input_sent)
         obj = models.Corpus.objects.filter(old__contains=input_sent)
-        if len(obj) == 0:
-            tfidf = analyse.extract_tags
-            keywords=tiqu.keyword_extraction(input_sent)
-            final_list = []
-            # 这部分keywords越多会影响速度
-            for k in keywords[0:3]:
-                print(k)
-                objs = models.Corpus.objects.filter(old__contains=k)
-                if len(objs) > 0:
-                    obj = objs[0]
-                    final_list.append(obj)
-            corpus_list+=final_list
-        else:
+        if len(obj)>0:
             corpus_list.append(obj[0])
+    if len(corpus_list)==0:
+        keywords = tiqu.keyword_extraction(src)
+        for k in keywords[0:3]:
+            objs = models.Corpus.objects.filter(old__contains=k)
+            if len(objs) > 0:
+                corpus_list.append(find_max_similarity_obj(objs,src))
     return corpus_list
 
-def get_full_translate(tiqu,src):
+def find_max_similarity_obj(objs,src):
+    obj=None
+    similarity=0
+    for i in objs:
+        s=Levenshtein.ratio(i.old,src)
+        if s>similarity:
+            similarity=s;
+            obj=i
+    return obj
+
+
+
+
+
+def get_full_translate(tiqu,src,tgt):
     tgt_corpus=get_corpus_translate(tiqu,src)
     tgt_dic=get_dic_translate(src)
-    Demo=Translate(src,src,tgt_corpus,tgt_dic)
+    Demo=Translate(src,tgt,tgt_corpus,tgt_dic)
     return Demo
 
+def get_back_translate(tiqu,src,tgt):
+    '''
+
+    :param tiqu: 关键词提取
+    :param src: 输入的现代文
+    :param tgt: 输出的文言文
+    :return:
+    '''
+    tgt_corpus=get_corpus_translate(tiqu,tgt)
+    tgt_dic=get_dic_translate(tgt)
+    Demo = Translate(src, tgt, tgt_corpus, tgt_dic)
+    return Demo
+
+def auto_add_punctuation(tiqu,src,tgt):
+    '''
+
+    :param tiqu: 关键词提取模块
+    :param src: 无标点古文
+    :param tgt: 有标点现代文
+    :return:
+    '''
+    tgt_corpus = get_corpus_translate(tiqu, tgt)
+    tgt_dic = get_dic_translate(src)
+    Demo = Translate(src, tgt, tgt_corpus, tgt_dic)
+    return Demo
 
