@@ -61,17 +61,6 @@ def get_dic_translate(src):
 
 
 
-def find_max_similarity(obj_list,src_sentence):
-    demo=0
-    obj = None
-    for l in obj_list:
-        similarity=Levenshtein.ratio(src_sentence,l.old)
-        if similarity>demo:
-            obj=l
-            demo=similarity
-    return obj
-
-
 
 def get_corpus_translate(tiqu,src):
     '''
@@ -97,11 +86,18 @@ def get_corpus_translate(tiqu,src):
 def find_max_similarity_obj(objs,src):
     obj=None
     similarity=0
-    for i in objs:
-        s=Levenshtein.ratio(i.old,src)
-        if s>similarity:
-            similarity=s;
-            obj=i
+    if len(objs)<50:
+        for i in objs:
+            s=Levenshtein.ratio(i.old,src)
+            if s>similarity:
+                similarity=s;
+                obj=i
+    else:
+        for i in objs[0:50]:
+            s = Levenshtein.ratio(i.old, src)
+            if s > similarity:
+                similarity = s;
+                obj = i
     return obj
 
 
