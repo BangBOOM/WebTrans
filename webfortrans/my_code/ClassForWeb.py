@@ -96,7 +96,7 @@ def find_max_similarity_obj(objs,src):
         for i in objs[0:50]:
             s = Levenshtein.ratio(i.old, src)
             if s > similarity:
-                similarity = s;
+                similarity = s
                 obj = i
     return obj
 
@@ -112,7 +112,6 @@ def get_full_translate(tiqu,src,tgt):
 
 def get_back_translate(tiqu,src,tgt):
     '''
-
     :param tiqu: 关键词提取
     :param src: 输入的现代文
     :param tgt: 输出的文言文
@@ -125,7 +124,6 @@ def get_back_translate(tiqu,src,tgt):
 
 def auto_add_punctuation(tiqu,src,tgt):
     '''
-
     :param tiqu: 关键词提取模块
     :param src: 无标点古文
     :param tgt: 有标点现代文

@@ -11,7 +11,8 @@ jieba.load_userdict("D:\CSE\jetbrains\pycharm\WebTrans\webfortrans\myfiles\成�
 # keywords=tfidf("加载")
 # print(keywords)
 # 将所有服务做成类然后在这部分预加载。
-tiqu=ClassForWeb.Tf_tiqu()
+
+get_keyword=ClassForWeb.Tf_tiqu()
 
 def index(request):
     '''
@@ -29,18 +30,26 @@ def index(request):
         # 前端提交古文到现代文翻译
         if "old2new.x" in request.POST:
             print('old2new')
-            Demo=ClassForWeb.get_full_translate(tiqu,src,src)
+            Demo=ClassForWeb.get_full_translate(get_keyword, src, src)
             return render(request, 'version-02/index.html',{'Demo':Demo})
 
         # 前端提交添加标点
         if "autopunc.x" in request.POST:
             print('autopunc')
-            Demo = ClassForWeb.auto_add_punctuation(tiqu, src, src)
+            Demo = ClassForWeb.auto_add_punctuation(get_keyword, src, src)
             return render(request, 'version-02/index.html',{'Demo':Demo})
 
         # 前端提交现代文到古文
         if "new2old.x" in request.POST:
             print("new2old")
-            Demo = ClassForWeb.get_back_translate(tiqu, src, src)
+            Demo = ClassForWeb.get_back_translate(get_keyword, src, src)
             return render(request, 'version-02/index.html',{'Demo':Demo})
 
+def index_1(request):
+    return render(request,'version-03/index_1.html')
+
+def index_2(request):
+    return render(request,'version-03/index_2.html')
+
+def index_3(request):
+    return render(request,'version-03/index_3.html')
