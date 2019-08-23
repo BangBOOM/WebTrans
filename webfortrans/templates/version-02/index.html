@@ -11,8 +11,43 @@
 document.documentElement.className = document.documentElement.className.replace(/\bnojs\b/g, 'js');
 
 // Check that all required assets are uploaded and up-to-date
-if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required":["{% static "version_2/scripts/museutils.js" %}","{% static "version_2/scripts/museconfig.js" %}""{% static "version_2/scripts/musewpslideshow.js" %}","{% static "version_2/scripts/jquery.museoverlay.js" %}","{% static "version_2/scripts/touchswipe.js" %}","{% static "version_2/scripts/jquery.watch.js" %}","{% static "/version_2/css/index.css" %}"], "outOfDate":[]};
+if(typeof Muse == "undefined") window.Muse = {};window.Muse.assets = {"required":["{% static "version_2/scripts/museutils.js" %}","{% static "version_2/scripts/museconfig.js" %}""{% static "version_2/scripts/musewpslideshow.js" %}","{% static "version_2/scripts/jquery.museoverlay.js" %}","{% static "version_2/scripts/touchswipe.js" %}","{% static "version_2/scripts/jquery.watch.js" %}","{% static "/version_2/css/index.css" %}"], "outOfDate":[]};
 </script>
+     <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+     <script>
+         $(document).ready(function () {
+             $('#u99').click(function () {
+                 var src=$('#src_get').val();
+
+                 $.getJSON('{% url 'webfortrans:get_trans' %}',{'src':src},function (ret) {
+                     {#$('#tgt_out').pop()#}
+                     $('#tgt_out').val(ret.tgt)
+                     {#$('#tgt_out').append(ret.tgt)#}
+                 })
+             })
+             $('#u103').click(function () {
+                 var src=$('#src_get').val();
+
+                 $.getJSON('{% url 'webfortrans:add_punc' %}',{'src':src},function (ret) {
+                     $('#tgt_out').val(ret.tgt)
+                 })
+             })
+             $('#u112').click(function () {
+                 var src=$('#src_get').val();
+                 $.getJSON('{% url 'webfortrans:get_corpus' %}',{'src':src},function (ret) {
+                        $('#corpus').val(ret.tgt)
+                 })
+
+             })
+             $('#u120').click(function () {
+                 var src=$('#src_get').val();
+                 $.getJSON('{% url 'webfortrans:get_dict' %}',{'src':src},function (ret) {
+                        $('#dict').val(ret.tgt)
+                 })
+
+             })
+         })
+     </script>
   
   <title>古文翻译</title>
   <!-- CSS -->
@@ -23,8 +58,8 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
  <body>
 
   <div class="clearfix" id="page"><!-- column -->
-      <form action="{% url 'webfortrans:translate' %}" method="POST">
-          {% csrf_token %}
+{#      <form action="{% url 'webfortrans:translate' %}" method="POST">#}
+{#          {% csrf_token %}#}
    <div class="position_content" id="page_position_content">
     <div class="clearfix colelem" id="pu94"><!-- group -->
      <div class="clip_frame grpelem" id="u94"><!-- image -->
@@ -37,15 +72,15 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
 
     <div class="clearfix colelem" id="pbuttonu98"><!-- group -->
      <div class="Button rounded-corners clearfix grpelem" id="buttonu98"><!-- container box -->
-      <img class="grpelem" id="u99" alt="古文→现代文" type='submit' src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->
+{#      <img class="grpelem" id="u99" alt="古文→现代文" type='submit' src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->#}
          <input type="image" class="grpelem" id="u99" alt="古文→现代文" name="old2new" src="{% static "version_2/images/blank.gif" %}"  οnclick="document.formName.submit()">
      </div>
      <div class="Button rounded-corners clearfix grpelem" id="buttonu100"><!-- container box -->
-      <img class="grpelem" id="u101" alt="现代文→古文" src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->
+{#      <img class="grpelem" id="u101" alt="现代文→古文" src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->#}
          <input type="image" class="grpelem" id="u101" alt="现代文→古文" name="new2old" src="{% static "version_2/images/blank.gif" %}"  οnclick="document.formName.submit()">
      </div>
      <div class="Button rounded-corners clearfix grpelem" id="buttonu102"><!-- container box -->
-      <img class="grpelem" id="u103" alt="古文自动加标点" src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->
+{#      <img class="grpelem" id="u103" alt="古文自动加标点" src="{% static "version_2/images/blank.gif" %}"/><!-- state-based BG images -->#}
          <input type="image" class="grpelem" id="u103" alt="古文自动加标点" name="autopunc" src="{% static "version_2/images/blank.gif" %}"  οnclick="document.formName.submit()">
      </div>
     </div>
@@ -58,7 +93,7 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
        <div class="ContainerGroup clearfix" id="u105"><!-- stack box -->
         <div class="Container clearfix grpelem" id="u106"><!-- group -->
          <div class="clearfix grpelem" id="u107-13"><!-- content -->
-         <textarea style="border:0;background-color:transparent;color:#666464;width: 500px;height: 240px;padding: 10px;" readonly='readonly'>
+         <textarea id='corpus' style="border:0;background-color:transparent;color:#666464;width: 500px;height: 240px;padding: 10px;" readonly='readonly'>
             {% for cor_dic in Demo.tgt_corpus %}
 原文：{{ cor_dic.old }}
 译文：{{ cor_dic.new }}
@@ -83,7 +118,7 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
        <div class="ContainerGroup clearfix" id="u123"><!-- stack box -->
         <div class="Container clearfix grpelem" id="u124"><!-- group -->
          <div class="clearfix grpelem" id="u125-17"><!-- content -->
-           <textarea style="border:0;background-color:transparent;color:#666464;width: 500px;height: 240px;padding: 10px;" readonly='readonly'>
+           <textarea id="dict" style="border:0;background-color:transparent;color:#666464;width: 500px;height: 240px;padding: 10px;" readonly='readonly'>
 {% for x in Demo.tgt_dic %}
 {{ x.key }}
 {% for l in x.value %}
@@ -115,15 +150,15 @@ if(typeof Muse == "undefined") window.Muse = {}; window.Muse.assets = {"required
       <img class="position_content" id="u134_img" src="{% static "version_2/images/2-%e5%9b%be%e7%89%8718.png" %}" alt="" width="560" height="299"/>
      </div>
      <div class="clearfix grpelem" id="u136-4"><!-- content -->
-      <textarea	name="input" style="border:0;background-color:transparent;color:#666464;width: 500px;height: 150px;padding: 10px;" placeholder="输入需要翻译的内容">{{ Demo.src }}</textarea>
+      <textarea	name="input" id="src_get" style="border:0;background-color:transparent;color:#666464;width: 500px;height: 150px;padding: 10px;font-family: 'Adobe 仿宋 Std R' " placeholder="输入需要翻译的内容">{{ Demo.src }}</textarea>
      </div>
      <div class="clearfix grpelem" id="u137-4"><!-- content -->
-      <textarea	style="border:0;background-color:transparent;color:#000000;width: 500px;height: 150px;padding: 10px;" readonly='readonly'>{{ Demo.tgt_model }}</textarea>
+      <textarea	id="tgt_out" style="border:0;background-color:transparent;color:#000000;width: 500px;height: 150px;padding: 10px;" readonly='readonly'>{{ Demo.tgt_model }}</textarea>
      </div>
     </div>
     <div class="verticalspacer" data-offset-top="0" data-content-above-spacer="825" data-content-below-spacer="97"></div>
    </div>
-      </form>
+{#      </form>#}
   </div>
 
   <div class="preload_images">
